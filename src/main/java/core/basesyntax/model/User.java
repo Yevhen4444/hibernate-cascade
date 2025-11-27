@@ -41,4 +41,3 @@ public class User {
         this.comments = comments;
     }
 }
-
