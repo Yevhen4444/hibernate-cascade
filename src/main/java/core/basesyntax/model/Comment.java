@@ -16,7 +16,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
-
     @ManyToMany
     @JoinTable(
             name = "comments_smiles",
@@ -51,13 +50,5 @@ public class Comment {
 
     public void setSmiles(List<Smile> smiles) {
         this.smiles = smiles;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

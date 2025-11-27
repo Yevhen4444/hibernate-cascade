@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+        "https://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
-        <property name="connection.url">jdbc:mysql://localhost/cinema?serverTimezone=UTC</property>
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.username">ma_admin</property>
-        <property name="connection.password">1234</property>
-        <property name="show_sql">true</property>
-        <property name="hbm2ddl.auto">update</property>
 
+        <!-- HSQLDB in-memory -->
+        <property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
+        <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+        <property name="connection.url">jdbc:hsqldb:mem:testdb</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+
+        <property name="show_sql">false</property>
+        <property name="hbm2ddl.auto">create-drop</property>
+
+        <!-- VERY IMPORTANT: mappings -->
         <mapping class="core.basesyntax.model.User"/>
         <mapping class="core.basesyntax.model.Comment"/>
         <mapping class="core.basesyntax.model.Smile"/>

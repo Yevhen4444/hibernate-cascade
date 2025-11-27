@@ -2,7 +2,6 @@ package core.basesyntax.dao.impl;
 
 import core.basesyntax.dao.UserDao;
 import core.basesyntax.exception.DataProcessingException;
-import core.basesyntax.model.Comment;
 import core.basesyntax.model.User;
 import java.util.List;
 import org.hibernate.Session;
@@ -17,11 +16,10 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     @Override
     public User create(User entity) {
         Transaction transaction = null;
-        try (Session session = factory.openSession()) {
+        Session session = null;
+        try {
+            session = factory.openSession();
             transaction = session.beginTransaction();
-            for (Comment comment : entity.getComments()) {
-                session.persist(comment);
-            }
             session.persist(entity);
             transaction.commit();
             return entity;
@@ -30,47 +28,65 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
                 transaction.rollback();
             }
             throw new DataProcessingException("Can't create user", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public User get(Long id) {
         Transaction transaction = null;
-        User user = null;
-        try (Session session = factory.openSession()) {
+        Session session = null;
+        try {
+            session = factory.openSession();
             transaction = session.beginTransaction();
-            user = session.get(User.class, id);
+            User user = session.get(User.class, id);
             transaction.commit();
+            return user;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't get user with id " + id);
+            throw new DataProcessingException("Can't get user with id " + id, e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
-        return user;
     }
 
     @Override
     public List<User> getAll() {
         Transaction transaction = null;
-        List<User> users = null;
-        try (Session session = factory.openSession()) {
+        Session session = null;
+        try {
+            session = factory.openSession();
             transaction = session.beginTransaction();
-            users = session.createQuery("FROM User", User.class).getResultList();
+            List<User> users = session
+                    .createQuery("FROM User", User.class)
+                    .getResultList();
             transaction.commit();
+            return users;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             throw new DataProcessingException("Can't get all users", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
-        return users;
     }
 
     @Override
     public void remove(User entity) {
         Transaction transaction = null;
-        try (Session session = factory.openSession()) {
+        Session session = null;
+        try {
+            session = factory.openSession();
             transaction = session.beginTransaction();
             User user = session.get(User.class, entity.getId());
             session.remove(user);
@@ -79,7 +95,12 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't remove user with id " + entity.getId(), e);
+            throw new DataProcessingException(
+                    "Can't remove user with id " + entity.getId(), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }

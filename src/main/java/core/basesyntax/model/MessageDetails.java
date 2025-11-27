@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,8 +13,6 @@ public class MessageDetails {
     private Long id;
     private String sender;
     private LocalDateTime sentTime;
-    @OneToOne(mappedBy = "messageDetails")
-    private Message message;
 
     public MessageDetails() {
     }
@@ -49,11 +46,4 @@ public class MessageDetails {
         this.sentTime = sentTime;
     }
 
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
-    }
 }
