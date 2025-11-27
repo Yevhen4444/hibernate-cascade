@@ -18,6 +18,9 @@ public class Message {
     @JoinColumn(name = "details_id")
     private MessageDetails messageDetails;
 
+    public Message() {
+    }
+
     public Long getId() {
         return id;
     }

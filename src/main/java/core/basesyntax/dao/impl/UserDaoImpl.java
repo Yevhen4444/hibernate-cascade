@@ -42,7 +42,10 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
-            User user = session.get(User.class, id);
+            User user = session.createQuery(
+                    "SELECT u FROM User u LEFT JOIN FETCH u.comments WHERE u.id = :id", User.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
             transaction.commit();
             return user;
         } catch (Exception e) {
